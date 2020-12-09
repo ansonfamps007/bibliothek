@@ -1,0 +1,62 @@
+spring:
+  application: 
+    name: bibliothek
+  jackson: 
+    property-naming-strategy : SNAKE_CASE
+    serialization:
+      fail-on-empty-beans: false
+  activemq: 
+    broker-url: failover:(tcp://feidfeijdlvm6:61616)?initialReconnectDelay=100&maxReconnectAttempts=-1
+    user: javadev
+    password: admin12#
+    in-memory: false
+  jms:
+    pub-sub-domain: true
+  datasource:
+    url: ${MYSQL_JDBC_URL:jdbc:mysql://10.58.105.178:3306/bibliothek} 
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PWD:root}
+  jpa: 
+    show-sql: true
+  mail:
+    host: ${SMTP_HOST:smtp.gmail.com}
+    username: ${SMTP_USER:abc@gmail.com}
+    password: ${SMTP_PWD:Toshokan@123}
+    port: ${SMTP_PORT:587}
+    properties:  
+      mail: 
+        smtp: 
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000 
+          auth: true
+          starttls: 
+            enable: true  
+jwt:
+  secret: xq0m8NGSQDTibX7uSvRgbK9b1Vd0a1q5
+  expiry: ${JWT_KEY_TTL:365} #Expiry calculate in days 
+  client-id: ${CLIENT_ID:ada072ad-5e02-4829-84e4-b528a6ec3372}
+  
+server:
+    port: ${API_PORT:8080}
+logging:
+  level: 
+    com.dlib.bibliothek: DEBUG    
+app:
+  mail-from: noreply@thinkpalm.com
+  feed-book-interval:  ${FEED_BOOK_INTERVAL:30} #Get feed recent books fetching interval
+  items-per-page: ${ITEMS_PER_PAGE:10}
+  book-return-days: ${BOOK_RETURN_DAYS:10} #Time period to return the book
+  book-taken-limit: ${BOOK_TAKEN_LIMIT:2} #Number of books a user can take 
+  return-limit: ${RETURN_LIMIT:3} #Limit for show the field isRenewable  
+  cover-image-path: ${COVER_IMAGE_PATH:D:/MyApps/coverImages/cover/}
+  default-cover-url: https://picsum.photos/500/500/?image=599
+  default-cover-thumb-url: https://picsum.photos/500/500/?image=599
+  cover-thumb-image-path: ${COVER_THUMB_IMAGE_PATH:D:/MyApps/coverImages/coverThumb/}
+  qr-code-image-path: ${QR_CODE_IMAGE_PATH:D:/MyApps/QrCode/}
+  qr-code-pdf-path: ${QR_CODE_PDF_PATH:D:/MyApps/QrCode/QrCodes.pdf}
+  privacy-policy-path: /home/thinkpalm/library-app/privacy_policy_toshokan.html
+  api-host: ${API_HOST:192.168.1.150:8081} #For swagger API
+  firebase-server-key: AAAAwmgqLkk:APA91bGcQLbN8uOWcdjGHbM6RcpGQReKc17l6GzXofvZOqgILTJXoWloBBp1TIqjTC8wOJdq2093jImp_BJJdzUN6ZavHYajsJUNxuvWZIebk1ass9FcoDTWStAo_zZBl9aa2KObe3Od
+  firebase-api-url: https://fcm.googleapis.com/fcm/send
+  

@@ -1,0 +1,49 @@
+spring:
+  application: 
+    name: toshokan
+  jackson: 
+    property-naming-strategy : SNAKE_CASE
+    serialization:
+      fail-on-empty-beans: false
+  datasource:
+    url: jdbc:mysql://10.0.75.1:3306/toshokan
+    username: root
+    password: root
+  jpa: 
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    username: toshokantestlib@gmail.com
+    password: Toshokan@123
+    port: 587
+    properties: 
+      mail: 
+        smtp: 
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          auth: true
+          starttls: 
+            enable: true  
+jwt:
+  secret: xq0m8NGSQDTibX7uSvRgbK9b1Vd0a1q5
+  expiry: 36000000 
+  
+server:
+    port: 8080
+app:
+  mail-from: noreply@thinkpalm.com
+  feed-book-interval: 30
+  items-per-page: 10
+  api-host: 192.168.1.150:8081
+#spring:
+ # datasource:
+  #  url: jdbc:h2:mem:testdb
+   # driverClassName: org.h2.Driver
+    #username: sa
+    #password:
+  #jpa: 
+   # show-sql: true
+    #h2:
+     # console:
+      #  enabled: true
