@@ -1,43 +1,37 @@
 
 package com.thinkpalm.toshokan.controller;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.dlib.bibliothek.controller.UserDataController;
 import com.dlib.bibliothek.model.User;
 import com.dlib.bibliothek.request.SignUpForm;
 import com.dlib.bibliothek.response.ApiResponse;
 import com.dlib.bibliothek.service.UserService;
-import com.dlib.bibliothek.util.JwtUtil;
-import com.thinkpalm.toshokan.ToshokanApplicationTests;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = ToshokanApplicationTests.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 public class UserDataControllerTest {
-
 
 	@InjectMocks
 	private UserDataController userDataController;
 
 	@Mock
 	private UserService userService;
-
-	@Mock
-	JwtUtil jwtUtil;
 
 	@Test
 	public void updateFcmTest() {
@@ -55,8 +49,7 @@ public class UserDataControllerTest {
 		String jwt = "token";
 		Optional<User> userOptional = Optional.of(user);
 
-		Mockito.when(jwtUtil.getJwt(mockedRequest)).thenReturn(jwt);
-		//Mockito.when(jwtUtil.extractUsername(jwt)).thenReturn(user.getUsername());
+		// Mockito.when(jwtUtil.extractUsername(jwt)).thenReturn(user.getUsername());
 		Mockito.when(userService.findByUsername(user.getUsername())).thenReturn(userOptional);
 		userOptional.get().setFcmId("FCM");
 		userService.updateUser(user);

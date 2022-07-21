@@ -7,7 +7,7 @@ import com.dlib.bibliothek.model.Book;
 import com.dlib.bibliothek.request.BookForm;
 import com.dlib.bibliothek.response.BookResponse;
 import com.dlib.bibliothek.response.Data;
-import com.google.zxing.WriterException;
+//import com.google.zxing.WriterException;
 
 public interface BookService {
 
@@ -29,13 +29,13 @@ public interface BookService {
 
 	int isBookAvailable(int bookId);
 
-	String generateQRCodeImage(Integer id, int width, int height) throws WriterException;
+	//String generateQRCodeImage(Integer id, int width, int height) /* throws WriterException */;
 
 	Data getNotifications(String userName, int pageNo, int itemsPerPage);
 
 	String saveCoverImage(MultipartFile uploadImage, int bookId);
 
-	void generatePdf();
+	//void generatePdf();
 
 	Data getBookByKeyword(int page, String keyword, int itemsPerPage, String userName);
 

@@ -1,22 +1,25 @@
 
 package com.thinkpalm.toshokan.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.dlib.bibliothek.model.Preference;
 import com.dlib.bibliothek.repository.PreferenceRepository;
 import com.dlib.bibliothek.service.impl.PreferenceServiceImpl;
 
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class PrefereneServiceTest {
 
 	@InjectMocks
@@ -25,11 +28,6 @@ public class PrefereneServiceTest {
 	@Mock
 	PreferenceRepository preferenceRepository;
 
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-
-	}
 
 	@Test
 	public void getAllPreferenceTest() throws Exception {

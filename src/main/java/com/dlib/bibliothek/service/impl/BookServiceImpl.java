@@ -53,7 +53,7 @@ import com.dlib.bibliothek.response.Notifications;
 import com.dlib.bibliothek.service.BookService;
 import com.dlib.bibliothek.util.ApiConstants;
 import com.dlib.bibliothek.util.BookUtil;
-import com.google.zxing.BarcodeFormat;
+/*import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -64,7 +64,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.PdfWriter;*/
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -546,85 +546,69 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.isBookAvailable(bookId);
 	}
 
-	@Override
-	@Async
-	public String generateQRCodeImage(Integer id, int width, int height) {
-
-		try {
-			QRCodeWriter qrCodeWriter = new QRCodeWriter();
-			String qrCode = "TPL-" + id;
-			BitMatrix bitMatrix = qrCodeWriter.encode(qrCode, BarcodeFormat.QR_CODE, width, height);
-			Path path = FileSystems.getDefault().getPath(qrCodeImagePath + qrCode + ".png");
-			MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-			return qrCode;
-		} catch (Exception ex) {
-			log.debug("QR code generation failed - " + ex.getMessage() + " - "
-					+ (null != ex.getCause() ? ex.getCause().getCause() : ex));
-			return null;
-		}
-
-	}
-
-	@Override
-	public void generatePdf() {
-
-		// PDF generator
-		Document document = new Document();
-		try {
-			PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(qrCodePdfPath));
-			document.open();
-
-			PdfPTable table = new PdfPTable(1);
-			table.setWidthPercentage(100); // Width 100%
-			table.setSpacingBefore(10f); // Space before table
-			table.setSpacingAfter(10f); // Space after table
-
-			try (Stream<Path> walk = Files.walk(Paths.get(qrCodeImagePath))) {
-
-				Map<Integer, Book> bookMap = bookRepository.findAllActiveBooks().stream()
-						.collect(Collectors.toMap(Book::getId, Function.identity()));
-				walk.filter(file -> file.getFileName().toString().endsWith(".png")).forEach(file -> {
-					int bookId = Integer.parseInt(file.getFileName().toString().split("\\.")[0].split("\\-")[1]);
-					if (bookMap.containsKey(bookId)) {
-
-						Image image;
-
-						// Create Image object
-						try {
-							image = Image.getInstance(qrCodeImagePath + file.getFileName().toString());
-							image.scaleAbsolute(200, 150);
-							image.setAbsolutePosition(100f, 700f);
-
-							PdfPCell cell = new PdfPCell();
-							cell.addElement(image);
-							cell.addElement(new Paragraph(bookMap.get(bookId).getTitle()));
-
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-							table.addCell(cell);
-						} catch (BadElementException | IOException ex) {
-							log.debug("Pdf generation failed - " + ex.getMessage() + " - "
-									+ (null != ex.getCause() ? ex.getCause().getCause() : ex));
-							throw new ValidationException("Pdf generation failed !");
-						}
-					}
-				});
-			} catch (Exception ex) {
-				log.debug("Pdf generation failed - " + ex.getMessage() + " - "
-						+ (null != ex.getCause() ? ex.getCause().getCause() : ex));
-				throw new ValidationException("Pdf generation failed !");
-			}
-			document.add(table);
-			document.close();
-			writer.close();
-
-		} catch (Exception ex) {
-			log.debug("Pdf generation failed - " + ex.getMessage() + " - "
-					+ (null != ex.getCause() ? ex.getCause().getCause() : ex));
-
-		}
-	}
+	/*
+	 * @Override
+	 * 
+	 * @Async public String generateQRCodeImage(Integer id, int width, int height) {
+	 * 
+	 * try { QRCodeWriter qrCodeWriter = new QRCodeWriter(); String qrCode = "TPL-"
+	 * + id; BitMatrix bitMatrix = qrCodeWriter.encode(qrCode,
+	 * BarcodeFormat.QR_CODE, width, height); Path path =
+	 * FileSystems.getDefault().getPath(qrCodeImagePath + qrCode + ".png");
+	 * MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path); return qrCode; }
+	 * catch (Exception ex) { log.debug("QR code generation failed - " +
+	 * ex.getMessage() + " - " + (null != ex.getCause() ? ex.getCause().getCause() :
+	 * ex)); return null; }
+	 * 
+	 * }
+	 * 
+	 * @Override public void generatePdf() {
+	 * 
+	 * // PDF generator Document document = new Document(); try { PdfWriter writer =
+	 * PdfWriter.getInstance(document, new FileOutputStream(qrCodePdfPath));
+	 * document.open();
+	 * 
+	 * PdfPTable table = new PdfPTable(1); table.setWidthPercentage(100); // Width
+	 * 100% table.setSpacingBefore(10f); // Space before table
+	 * table.setSpacingAfter(10f); // Space after table
+	 * 
+	 * try (Stream<Path> walk = Files.walk(Paths.get(qrCodeImagePath))) {
+	 * 
+	 * Map<Integer, Book> bookMap = bookRepository.findAllActiveBooks().stream()
+	 * .collect(Collectors.toMap(Book::getId, Function.identity()));
+	 * walk.filter(file ->
+	 * file.getFileName().toString().endsWith(".png")).forEach(file -> { int bookId
+	 * =
+	 * Integer.parseInt(file.getFileName().toString().split("\\.")[0].split("\\-")[1
+	 * ]); if (bookMap.containsKey(bookId)) {
+	 * 
+	 * Image image;
+	 * 
+	 * // Create Image object try { image = Image.getInstance(qrCodeImagePath +
+	 * file.getFileName().toString()); image.scaleAbsolute(200, 150);
+	 * image.setAbsolutePosition(100f, 700f);
+	 * 
+	 * PdfPCell cell = new PdfPCell(); cell.addElement(image); cell.addElement(new
+	 * Paragraph(bookMap.get(bookId).getTitle()));
+	 * 
+	 * cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	 * cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	 * 
+	 * table.addCell(cell); } catch (BadElementException | IOException ex) {
+	 * log.debug("Pdf generation failed - " + ex.getMessage() + " - " + (null !=
+	 * ex.getCause() ? ex.getCause().getCause() : ex)); throw new
+	 * ValidationException("Pdf generation failed !"); } } }); } catch (Exception
+	 * ex) { log.debug("Pdf generation failed - " + ex.getMessage() + " - " + (null
+	 * != ex.getCause() ? ex.getCause().getCause() : ex)); throw new
+	 * ValidationException("Pdf generation failed !"); } document.add(table);
+	 * document.close(); writer.close();
+	 * 
+	 * } catch (Exception ex) { log.debug("Pdf generation failed - " +
+	 * ex.getMessage() + " - " + (null != ex.getCause() ? ex.getCause().getCause() :
+	 * ex));
+	 * 
+	 * } }
+	 */
 
 	@Override
 	@Transactional

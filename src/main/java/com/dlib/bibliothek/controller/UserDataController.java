@@ -23,7 +23,6 @@ import com.dlib.bibliothek.response.Data;
 import com.dlib.bibliothek.response.UserResponse;
 import com.dlib.bibliothek.service.UserService;
 import com.dlib.bibliothek.util.ApiConstants;
-import com.dlib.bibliothek.util.JwtUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +39,6 @@ public class UserDataController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private JwtUtil jwtUtil;
 
 	/**
 	 * 
@@ -75,11 +72,9 @@ public class UserDataController {
 	@PostMapping(value = "/update_fcm", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ApiResponse updateFcm(@RequestBody SignUpForm signUpForm, HttpServletRequest request) {
-		String jwt = jwtUtil.getJwt(request);
-		String userName = (null != jwt) ? jwtUtil.retriveUsernameFromJsonString(jwtUtil.getDataFromToken(jwt)) : null;
 		String fcmId = signUpForm.getFcmId();
 		log.info("UserDataController - updateFcm {} ", fcmId);
-		return userService.findByUsername(userName).map(user -> {
+		return userService.findByUsername("").map(user -> {
 			user.setFcmId(fcmId);
 			userService.updateUser(user);
 			return ApiResponse.builder().error(false).message("Fcm id updated").build();

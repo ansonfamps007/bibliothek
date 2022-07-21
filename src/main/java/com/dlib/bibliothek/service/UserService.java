@@ -8,7 +8,7 @@ import javax.naming.ServiceUnavailableException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetails;
 
 import com.dlib.bibliothek.model.User;
 import com.dlib.bibliothek.request.LoginForm;
@@ -16,7 +16,7 @@ import com.dlib.bibliothek.request.ResetPasswordForm;
 import com.dlib.bibliothek.request.SignUpForm;
 import com.dlib.bibliothek.response.Data;
 import com.dlib.bibliothek.response.UserResponse;
-import com.microsoft.aad.adal4j.AuthenticationResult;
+//import com.microsoft.aad.adal4j.AuthenticationResult;
 
 public interface UserService {
 	
@@ -38,13 +38,13 @@ public interface UserService {
 
 	void resetPassword(User user, @Valid ResetPasswordForm resetPasswordForm);
 
-	AuthenticationResult authenticateUser(@Valid LoginForm loginRequest);
+	//AuthenticationResult authenticateUser(@Valid LoginForm loginRequest);
 	
 	void updateUser(User user);
 
 	List<UserResponse> notReturnedUser();
 
-	Data getUserToken(UserDetails userDetails, AuthenticationResult result);
+	//Data getUserToken(UserDetails userDetails, AuthenticationResult result);
 
 	Object getTokenFromRefreshToken(String refreshToken) throws ServiceUnavailableException;
 
