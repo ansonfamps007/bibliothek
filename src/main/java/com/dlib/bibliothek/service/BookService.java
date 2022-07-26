@@ -46,4 +46,6 @@ public interface BookService {
 
 	List<BookDto> getAllBooks(int pageNo, int pageLimit);
 
+	List<BookDto> getBookByName(String name);
+
 }

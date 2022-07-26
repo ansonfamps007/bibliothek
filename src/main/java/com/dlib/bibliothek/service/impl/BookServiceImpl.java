@@ -55,6 +55,8 @@ import com.dlib.bibliothek.response.Notifications;
 import com.dlib.bibliothek.service.BookService;
 import com.dlib.bibliothek.util.ApiConstants;
 import com.dlib.bibliothek.util.BookUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 /*import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -98,6 +100,9 @@ public class BookServiceImpl implements BookService {
 
 	@Value("${app.return-limit}")
 	private String returnLimit;
+
+	private static HttpClient client = HttpClient.newBuilder().version(Version.HTTP_2)
+			.connectTimeout(Duration.ofSeconds(20)).build();
 
 	@Autowired
 	private BookRepository bookRepository;
@@ -663,26 +668,38 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<BookDto> getAllBooks(int pageNo, int pageLimit) {
 		try {
-			HttpClient client = HttpClient.newBuilder().version(Version.HTTP_2).connectTimeout(Duration.ofSeconds(20))
-					.build();
+
 			StringBuilder uri = new StringBuilder("http://localhost:8081/api/book/getAll?").append("pageNo=")
 					.append(pageNo).append("&pageLimit=").append(pageLimit);
-
-			HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri.toString())).GET().build();
-			HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-			ObjectMapper mapper = new ObjectMapper();
-			List<BookDto> bookList = mapper.readValue(response.body(),
-					mapper.getTypeFactory().constructCollectionType(List.class, BookDto.class));
-
-			return bookList;
-			
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return bookDtoList(client, uri);
+		} catch (URISyntaxException | IOException | InterruptedException ex) {
+			log.debug("getAllBooks, Exception - " + ex.getMessage() + " - "
+					+ (null != ex.getCause() ? ex.getCause().getCause() : ex));
+			throw new ValidationException("getAllBooks Api call failed !");
 		}
-		return null;
+	}
+
+	@Override
+	public List<BookDto> getBookByName(String name) {
+		try {
+
+			StringBuilder uri = new StringBuilder("http://localhost:8081/api/book/get/").append(name);
+			return bookDtoList(client, uri);
+		} catch (URISyntaxException | IOException | InterruptedException ex) {
+			log.debug("getBookByName, Exception - " + ex.getMessage() + " - "
+					+ (null != ex.getCause() ? ex.getCause().getCause() : ex));
+			throw new ValidationException("getBookByName Api call failed !");
+		}
+	}
+
+	private List<BookDto> bookDtoList(HttpClient client, StringBuilder uri) throws URISyntaxException, IOException,
+			InterruptedException, JsonProcessingException, JsonMappingException {
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri.toString())).GET().build();
+		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+		ObjectMapper mapper = new ObjectMapper();
+		List<BookDto> bookList = mapper.readValue(response.body(),
+				mapper.getTypeFactory().constructCollectionType(List.class, BookDto.class));
+
+		return bookList;
 	}
 }
