@@ -35,7 +35,7 @@ public class BookIssueController {
 	@Autowired
 	private WatchlistService watchlistService;
 
-	@PostMapping(value = "/take_book/{book_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/take/{book_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ApiResponse takeBook(@PathVariable(value = "book_id", required = true) int bookId,
 			HttpServletRequest request) {
 
@@ -44,7 +44,7 @@ public class BookIssueController {
 		return ApiResponse.builder().error(false).message(responseMsg).build();
 	}
 
-	@PostMapping(value = "/return_book/{book_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/return/{book_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ApiResponse returnBook(@PathVariable(value = "book_id", required = true) int bookId,
 			HttpServletRequest request) {
 		log.debug("BookIssueController : returnBook {} ");
@@ -56,7 +56,7 @@ public class BookIssueController {
 		}
 	}
 
-	@PostMapping(value = "/renew_book/{book_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/renew/{book_id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ApiResponse renewBook(@PathVariable(value = "book_id", required = true) int bookId,
 			HttpServletRequest request) {
 
@@ -65,7 +65,7 @@ public class BookIssueController {
 		return ApiResponse.builder().error(false).message(responseMsg).build();
 	}
 
-	@GetMapping(value = "/get_my_books", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findMyBooks", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ApiResponse getMyBooks(HttpServletRequest request) {
 		List<BookResponse> bookList = bookIssueService.getMyBooks("");
 		if (!CollectionUtils.isEmpty(bookList)) {
