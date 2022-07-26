@@ -1,10 +1,13 @@
 
 package com.dlib.bibliothek.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dlib.bibliothek.model.Book;
 import com.dlib.bibliothek.request.BookForm;
+import com.dlib.bibliothek.response.BookDto;
 import com.dlib.bibliothek.response.BookResponse;
 import com.dlib.bibliothek.response.Data;
 //import com.google.zxing.WriterException;
@@ -40,5 +43,7 @@ public interface BookService {
 	Data getBookByKeyword(int page, String keyword, int itemsPerPage, String userName);
 
 	String saveCoverImageThumb(MultipartFile uploadImage, int bookId);
+
+	List<BookDto> getAllBooks(int pageNo, int pageLimit);
 
 }

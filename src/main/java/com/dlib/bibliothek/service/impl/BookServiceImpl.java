@@ -1,22 +1,24 @@
 
 package com.dlib.bibliothek.service.impl;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
@@ -25,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -45,6 +46,7 @@ import com.dlib.bibliothek.repository.LanguageRepository;
 import com.dlib.bibliothek.repository.UserRepository;
 import com.dlib.bibliothek.repository.WatchlistRepository;
 import com.dlib.bibliothek.request.BookForm;
+import com.dlib.bibliothek.response.BookDto;
 import com.dlib.bibliothek.response.BookResponse;
 import com.dlib.bibliothek.response.Data;
 import com.dlib.bibliothek.response.FeedItems;
@@ -65,6 +67,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;*/
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -655,5 +658,31 @@ public class BookServiceImpl implements BookService {
 			throw new ValidationException("Image upload failed !");
 		}
 
+	}
+
+	@Override
+	public List<BookDto> getAllBooks(int pageNo, int pageLimit) {
+		try {
+			HttpClient client = HttpClient.newBuilder().version(Version.HTTP_2).connectTimeout(Duration.ofSeconds(20))
+					.build();
+			StringBuilder uri = new StringBuilder("http://localhost:8081/api/book/getAll?").append("pageNo=")
+					.append(pageNo).append("&pageLimit=").append(pageLimit);
+
+			HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri.toString())).GET().build();
+			HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+			ObjectMapper mapper = new ObjectMapper();
+			List<BookDto> bookList = mapper.readValue(response.body(),
+					mapper.getTypeFactory().constructCollectionType(List.class, BookDto.class));
+
+			return bookList;
+			
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

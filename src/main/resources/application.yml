@@ -13,7 +13,7 @@ spring:
   jms:
     pub-sub-domain: true
   datasource:
-    url: ${MYSQL_JDBC_URL:jdbc:mysql://10.58.105.178:3306/bibliothek} 
+    url: ${MYSQL_JDBC_URL:jdbc:mysql://127.0.0.1:3306/bookstore} 
     username: ${MYSQL_USER:root}
     password: ${MYSQL_PWD:root}
   jpa: 
