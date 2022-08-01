@@ -39,8 +39,12 @@ public class BookController {
 	@Value("${app.cover-image-path}")
 	private String coverImagePath;
 
+	private final BookService bookService;
+	
 	@Autowired
-	private BookService bookService;
+	public BookController(BookService bookService) {
+		this.bookService = bookService;
+	}
 
 	@Autowired
 	private WatchlistService watchlistService;

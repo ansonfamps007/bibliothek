@@ -38,7 +38,7 @@ jwt:
   client-id: ${CLIENT_ID:ada072ad-5e02-4829-84e4-b528a6ec3372}
   
 server:
-    port: ${API_PORT:8080}
+    port: ${API_PORT:9090}
 logging:
   level: 
     com.dlib.bibliothek: DEBUG    
